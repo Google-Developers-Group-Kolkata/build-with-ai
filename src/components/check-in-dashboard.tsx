@@ -45,9 +45,8 @@ function ParticipantModal({
             </p>
             <h2 className="mt-1 text-2xl font-semibold text-stone-950">{participant.name}</h2>
           </div>
-          <span className={`mt-1 shrink-0 rounded-full px-3 py-1 text-sm font-medium ${
-            participant.present ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-          }`}>
+          <span className={`mt-1 shrink-0 rounded-full px-3 py-1 text-sm font-medium ${participant.present ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+            }`}>
             {participant.present ? 'Present' : 'Pending'}
           </span>
         </div>
@@ -139,23 +138,32 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
   // ── search with debounce ─────────────────────────────────────────────────
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function handleSearchChange(value: string) {
     setSearchInput(value);
+    setPage(1); // reset to first page on new search
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => setSearchQuery(value.trim().toLowerCase()), 300);
   }
   useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
+  // ── sorted + filtered participants ──────────────────────────────────────
+  const PAGE_SIZE = 10;
+
+  const sortedParticipants = [...participants].sort((a, b) =>
+    a.email.localeCompare(b.email),
+  );
+
   const filteredParticipants = searchQuery
-    ? participants.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchQuery) ||
-          p.email.toLowerCase().includes(searchQuery) ||
-          p.company.toLowerCase().includes(searchQuery),
-      )
-    : participants;
+    ? sortedParticipants.filter(
+      (p) =>
+        p.name.toLowerCase().includes(searchQuery) ||
+        p.email.toLowerCase().includes(searchQuery) ||
+        p.company.toLowerCase().includes(searchQuery),
+    )
+    : sortedParticipants;
 
   // ── QR scanner hook ──────────────────────────────────────────────────────
   const { cameraState, scannerReady, retry, pause, resume } = useQrScanner({
@@ -172,15 +180,21 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
     debounceMs: 4000,
   });
 
+  useEffect(() => {
+    if (!scannerOpen) return;
+    const raf = requestAnimationFrame(() => retry());
+    return () => cancelAnimationFrame(raf);
+  }, [scannerOpen, retry]);
+
   // ── camera label ─────────────────────────────────────────────────────────
   const cameraLabel =
     cameraState === 'ready' ? 'Scanning' :
-    cameraState === 'paused' ? 'Paused' :
-    cameraState === 'starting' ? 'Starting…' :
-    cameraState === 'insecure' ? 'HTTPS required' :
-    cameraState === 'denied' ? 'Permission denied' :
-    cameraState === 'unsupported' ? 'Not supported' :
-    cameraState === 'error' ? 'Camera error' : 'Idle';
+      cameraState === 'paused' ? 'Paused' :
+        cameraState === 'starting' ? 'Starting…' :
+          cameraState === 'insecure' ? 'HTTPS required' :
+            cameraState === 'denied' ? 'Permission denied' :
+              cameraState === 'unsupported' ? 'Not supported' :
+                cameraState === 'error' ? 'Camera error' : 'Idle';
 
   // ── data helpers ─────────────────────────────────────────────────────────
 
@@ -292,8 +306,8 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
                 type="button"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                  <rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/><rect x="14" y="14" width="3" height="3"/>
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                  <rect x="7" y="7" width="3" height="3" /><rect x="14" y="7" width="3" height="3" /><rect x="7" y="14" width="3" height="3" /><rect x="14" y="14" width="3" height="3" />
                 </svg>
                 Scan Now
               </button>
@@ -315,127 +329,88 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
             </div>
           </section>
 
-          {/* ── Scanner + manual ────────────────────────────────────────── */}
-          <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-
-            {/* QR panel (desktop/tablet — hidden on small screens when scanner modal is used) */}
-            <div className="hidden rounded-[2rem] border border-white/65 bg-stone-950 p-5 text-stone-50 shadow-[0_24px_80px_rgba(41,37,36,0.2)] lg:block">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-amber-300">Live scanner</p>
-                  <h2 className="mt-2 text-2xl font-semibold">Camera preview</h2>
-                </div>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-sm text-stone-200">
-                  {cameraLabel}
-                </span>
+          {/* ── manual ────────────────────────────────────────── */}
+          {/* Participant list */}
+          <section className="rounded-[2rem] border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm uppercase tracking-[0.28em] text-amber-700">Attendance register</p>
+                <h2 className="mt-2 text-2xl font-semibold text-stone-950">Participant list</h2>
               </div>
-              <div className="mt-5">{scannerPanel}</div>
+              <p className="text-xs text-stone-400">{filteredParticipants.length} shown</p>
             </div>
 
-            {/* Right column */}
-            <div className="space-y-6">
+            {/* Debounced search */}
+            <div className="mt-4">
+              <input
+                className="w-full rounded-[1rem] border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-amber-400"
+                onChange={(e) => handleSearchChange(e.target.value)}
+                placeholder="Search by name, email or company…"
+                type="search"
+                value={searchInput}
+              />
+            </div>
 
-              {/* Manual check-in */}
-              <section className="rounded-[2rem] border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.28em] text-amber-700">Backup entry</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-stone-950">Manual check-in</h2>
-                  </div>
-                  <button
-                    className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-950 hover:text-stone-950 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isRefreshing}
-                    onClick={() => void refreshParticipants()}
-                    type="button"
-                  >
-                    {isRefreshing ? 'Refreshing…' : 'Refresh list'}
-                  </button>
-                </div>
-
-                <form
-                  className="mt-5 space-y-4"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const email = extractEmail(manualValue) ?? manualValue.trim().toLowerCase();
-                    const found = participants.find((p) => p.email === email);
-                    if (found) { setModalParticipant(found); setManualValue(''); }
-                    else void submitCheckIn(email);
-                  }}
-                >
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-stone-700">
-                      Participant email or raw QR text
-                    </span>
-                    <input
-                      className="w-full rounded-[1rem] border border-stone-300 bg-white px-4 py-3 text-base text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-amber-500"
-                      onChange={(e) => setManualValue(e.target.value)}
-                      placeholder="name@example.com"
-                      value={manualValue}
-                    />
-                  </label>
-                  <button
-                    className="w-full rounded-[1rem] bg-amber-500 px-4 py-3 text-base font-semibold text-stone-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isSubmitting || !manualValue.trim()}
-                    type="submit"
-                  >
-                    {isSubmitting ? 'Looking up…' : 'Look up participant'}
-                  </button>
-                </form>
-              </section>
-
-              {/* Participant list */}
-              <section className="rounded-[2rem] border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.28em] text-amber-700">Attendance register</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-stone-950">Participant list</h2>
-                  </div>
-                  <p className="text-xs text-stone-400">{filteredParticipants.length} shown</p>
-                </div>
-
-                {/* Debounced search */}
-                <div className="mt-4">
-                  <input
-                    className="w-full rounded-[1rem] border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-950 outline-none transition placeholder:text-stone-400 focus:border-amber-400"
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                    placeholder="Search by name, email or company…"
-                    type="search"
-                    value={searchInput}
-                  />
-                </div>
-
-                <div className="mt-4 grid gap-3">
-                  {filteredParticipants.length === 0 ? (
-                    <p className="py-6 text-center text-sm text-stone-400">No participants match your search.</p>
-                  ) : (
-                    filteredParticipants.map((participant) => (
-                      <button
-                        key={participant.id}
-                        className="w-full rounded-[1.4rem] border border-stone-200 bg-stone-50 px-4 py-4 text-left transition hover:border-amber-300 hover:bg-amber-50 active:scale-[0.99]"
-                        onClick={() => setModalParticipant(participant)}
-                        type="button"
-                      >
-                        <div className="flex flex-wrap items-start justify-between gap-3">
-                          <div>
-                            <h3 className="text-base font-semibold text-stone-950">{participant.name}</h3>
-                            <p className="text-sm text-stone-500">{participant.email}</p>
-                            <p className="mt-1 text-xs text-stone-400">{participant.company} · {participant.ticketType}</p>
-                          </div>
-                          <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                            participant.present
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-amber-100 text-amber-800'
-                          }`}>
-                            {participant.present ? 'Present' : 'Pending'}
-                          </span>
+            <div className="mt-4 grid gap-3">
+              {filteredParticipants.length === 0 ? (
+                <p className="py-6 text-center text-sm text-stone-400">No participants match your search.</p>
+              ) : (
+                filteredParticipants
+                  .slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+                  .map((participant) => (
+                    <button
+                      key={participant.id}
+                      className="w-full rounded-[1.4rem] border border-stone-200 bg-stone-50 px-4 py-4 text-left transition hover:border-amber-300 hover:bg-amber-50 active:scale-[0.99]"
+                      onClick={() => setModalParticipant(participant)}
+                      type="button"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-stone-950">{participant.name}</h3>
+                          <p className="text-sm text-stone-500">{participant.email}</p>
+                          <p className="mt-1 text-xs text-stone-400">{participant.company} · {participant.ticketType}</p>
                         </div>
-                        <p className="mt-2 text-xs text-stone-400">{formatTime(participant.checkedInAt)}</p>
-                      </button>
-                    ))
-                  )}
-                </div>
-              </section>
+                        <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                          participant.present ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                        }`}>
+                          {participant.present ? 'Present' : 'Pending'}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs text-stone-400">{formatTime(participant.checkedInAt)}</p>
+                    </button>
+                  ))
+              )}
             </div>
+
+            {/* ── Pagination ─────────────────────────────────────────────── */}
+            {filteredParticipants.length > PAGE_SIZE && (
+              <div className="mt-5 flex items-center justify-between gap-3">
+                <button
+                  className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-400 hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  type="button"
+                >
+                  ← Prev
+                </button>
+
+                <span className="text-xs text-stone-500">
+                  Page {page} of {Math.ceil(filteredParticipants.length / PAGE_SIZE)}
+                  <span className="ml-2 text-stone-400">
+                    ({(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filteredParticipants.length)} of {filteredParticipants.length})
+                  </span>
+                </span>
+
+                <button
+                  className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-amber-400 hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={page >= Math.ceil(filteredParticipants.length / PAGE_SIZE)}
+                  onClick={() => setPage((p) => p + 1)}
+                  type="button"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
           </section>
         </div>
       </main>

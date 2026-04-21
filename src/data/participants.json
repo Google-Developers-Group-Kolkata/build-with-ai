@@ -52,5 +52,194 @@
     "ticketType": "Attendee",
     "present": false,
     "checkedInAt": null
+  },
+  {
+    "id": "SEM-007",
+    "name": "Rahul Pal",
+    "email": "rahul.pal@example.com",
+    "company": "NVIDIA",
+    "ticketType": "Speaker",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-008",
+    "name": "Ananya Sharma",
+    "email": "ananya.sharma@example.com",
+    "company": "DeepRoot AI",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-009",
+    "name": "Vikram Bose",
+    "email": "vikram.bose@example.com",
+    "company": "Orion Digital",
+    "ticketType": "VIP",
+    "present": true,
+    "checkedInAt": "2026-04-21T09:15:00.000Z"
+  },
+  {
+    "id": "SEM-010",
+    "name": "Priya Desai",
+    "email": "priya.desai@example.com",
+    "company": "SkyNet Analytics",
+    "ticketType": "Speaker",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-011",
+    "name": "Arjun Pillai",
+    "email": "arjun.pillai@example.com",
+    "company": "CodeCraft India",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-012",
+    "name": "Nisha Verma",
+    "email": "nisha.verma@example.com",
+    "company": "BlueMesh Labs",
+    "ticketType": "Volunteer",
+    "present": true,
+    "checkedInAt": "2026-04-21T08:55:00.000Z"
+  },
+  {
+    "id": "SEM-013",
+    "name": "Ravi Krishnan",
+    "email": "ravi.krishnan@example.com",
+    "company": "Tachyon Works",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-014",
+    "name": "Pooja Menon",
+    "email": "pooja.menon@example.com",
+    "company": "Ember Systems",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-015",
+    "name": "Siddharth Rao",
+    "email": "siddharth.rao@example.com",
+    "company": "NexGen Robotics",
+    "ticketType": "Speaker",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-016",
+    "name": "Lakshmi Subramanian",
+    "email": "lakshmi.subramanian@example.com",
+    "company": "Quantum Flux",
+    "ticketType": "VIP",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-017",
+    "name": "Aditya Ghosh",
+    "email": "aditya.ghosh@example.com",
+    "company": "InnoSpark Technologies",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-018",
+    "name": "Kavya Reddy",
+    "email": "kavya.reddy@example.com",
+    "company": "DataPulse Corp",
+    "ticketType": "Attendee",
+    "present": true,
+    "checkedInAt": "2026-04-21T09:22:00.000Z"
+  },
+  {
+    "id": "SEM-019",
+    "name": "Manish Thakur",
+    "email": "manish.thakur@example.com",
+    "company": "Helix Cloud",
+    "ticketType": "Volunteer",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-020",
+    "name": "Tanvi Kulkarni",
+    "email": "tanvi.kulkarni@example.com",
+    "company": "ZeroPoint Labs",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-021",
+    "name": "Gaurav Mishra",
+    "email": "gaurav.mishra@example.com",
+    "company": "Ignite Ventures",
+    "ticketType": "Speaker",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-022",
+    "name": "Shruti Pandey",
+    "email": "shruti.pandey@example.com",
+    "company": "Apex DevOps",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-023",
+    "name": "Rahul Saxena",
+    "email": "rahul.saxena@example.com",
+    "company": "ClearSky Networks",
+    "ticketType": "VIP",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-024",
+    "name": "Isha Chatterjee",
+    "email": "isha.chatterjee@example.com",
+    "company": "Pulse Media",
+    "ticketType": "Attendee",
+    "present": true,
+    "checkedInAt": "2026-04-21T09:30:00.000Z"
+  },
+  {
+    "id": "SEM-025",
+    "name": "Deepak Bansal",
+    "email": "deepak.bansal@example.com",
+    "company": "Stratos Engineering",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-026",
+    "name": "Neha Srivastava",
+    "email": "neha.srivastava@example.com",
+    "company": "Arcturus AI",
+    "ticketType": "Speaker",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-027",
+    "name": "Yash Malhotra",
+    "email": "yash.malhotra@example.com",
+    "company": "Trident Systems",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
   }
 ]
