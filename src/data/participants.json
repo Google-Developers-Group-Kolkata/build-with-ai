@@ -1,0 +1,56 @@
+[
+  {
+    "id": "SEM-001",
+    "name": "Aarav Mehta",
+    "email": "aarav.mehta@example.com",
+    "company": "PixelForge Labs",
+    "ticketType": "Speaker",
+    "present": true,
+    "checkedInAt": "2026-04-21T09:08:10.848Z"
+  },
+  {
+    "id": "SEM-002",
+    "name": "Diya Nair",
+    "email": "diya.nair@example.com",
+    "company": "Northwind Studio",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-003",
+    "name": "Rohan Kapoor",
+    "email": "rohan.kapoor@example.com",
+    "company": "Cloudline Systems",
+    "ticketType": "VIP",
+    "present": true,
+    "checkedInAt": "2026-04-21T08:45:00.000Z"
+  },
+  {
+    "id": "SEM-004",
+    "name": "Sneha Iyer",
+    "email": "sneha.iyer@example.com",
+    "company": "Open Canvas",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-005",
+    "name": "Kabir Shah",
+    "email": "kabir.shah@example.com",
+    "company": "Vertex Health",
+    "ticketType": "Volunteer",
+    "present": false,
+    "checkedInAt": null
+  },
+  {
+    "id": "SEM-006",
+    "name": "Meera Joshi",
+    "email": "meera.joshi@example.com",
+    "company": "BrightStack",
+    "ticketType": "Attendee",
+    "present": false,
+    "checkedInAt": null
+  }
+]
