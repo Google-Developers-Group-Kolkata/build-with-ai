@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Google brand colors */
+  --google-red:    #EA4335;
+  --google-blue:   #4285F4;
+  --google-green:  #34A853;
+  --google-yellow: #FBBC04;
 }
 
 @theme inline {
