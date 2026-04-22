@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getAdminSession } from "@/lib/auth";
 import { markParticipantPresent } from "@/lib/participants";
 
 type CheckInPayload = {
@@ -7,6 +8,12 @@ type CheckInPayload = {
 };
 
 export async function POST(request: Request) {
+  const session = await getAdminSession();
+
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   const body = (await request.json()) as CheckInPayload;
   const email = body.email?.trim();
 

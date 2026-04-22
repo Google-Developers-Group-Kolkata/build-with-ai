@@ -1,6 +1,7 @@
 'use client';
 
 import { startTransition, useEffect, useRef, useState } from 'react';
+import { AdminSignOutButton } from '@/components/admin-sign-out-button';
 import type { Participant } from '@/lib/participants';
 import { useQrScanner } from '@/hooks/useQrScanner';
 
@@ -11,16 +12,6 @@ function extractId(raw: string): string | null {
   return s.trim() || null;
 }
 
-const TICKET_BADGE: Record<string, string> = {
-  Speaker: 'bg-purple-100 text-purple-800',
-  VIP: 'bg-amber-100  text-amber-800',
-  Volunteer: 'bg-blue-100   text-blue-800',
-  Attendee: 'bg-stone-100  text-stone-800',
-};
-
-function ticketClass(type: string) {
-  return TICKET_BADGE[type] ?? 'bg-stone-100 text-stone-800';
-}
 
 // ─── Participant Detail Modal ─────────────────────────────────────────────────
 
@@ -45,7 +36,7 @@ function ParticipantModal({
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-md animate-[slideUp_0.25s_ease-out] rounded-[2rem] bg-white p-6 shadow-2xl">
+      <div className="w-full max-w-md animate-[slideUp_0.25s_ease-out] rounded-4xl bg-white p-6 shadow-2xl">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: participant.attended ? '#34A853' : '#FBBC04' }}>
@@ -101,7 +92,7 @@ function ParticipantModal({
 
         <div className="mt-5 flex gap-3">
           <button
-            className="flex-1 rounded-[1rem] border border-stone-300 py-3 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
+            className="flex-1 rounded-2xl border border-stone-300 py-3 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
             onClick={onClose}
             type="button"
           >
@@ -109,7 +100,7 @@ function ParticipantModal({
           </button>
           {!participant.attended && (
             <button
-              className="flex-1 rounded-[1rem] py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-2xl py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               style={{ background: '#4285F4' }}
               disabled={isSubmitting}
               onClick={onConfirm}
@@ -120,7 +111,7 @@ function ParticipantModal({
           )}
           {participant.attended && (
             <button
-              className="flex-1 rounded-[1rem] py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-2xl py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
               style={participant.food
                 ? { background: '#e8f5e9', color: '#34A853', cursor: 'default' }
                 : { background: '#34A853', color: '#fff' }}
@@ -173,12 +164,16 @@ function ScannerModal({
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function CheckInDashboard({ initialParticipants }: { initialParticipants: Participant[] }) {
+export function CheckInDashboard({
+  adminName,
+  initialParticipants,
+}: {
+  adminName: string;
+  initialParticipants: Participant[];
+}) {
   const [participants, setParticipants] = useState<Participant[]>(initialParticipants);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFoodSubmitting, setIsFoodSubmitting] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [manualValue, setManualValue] = useState('');
 
   // ── modal state ──────────────────────────────────────────────────────────
   const [modalParticipant, setModalParticipant] = useState<Participant | null>(null);
@@ -250,14 +245,12 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
   // ── data helpers ─────────────────────────────────────────────────────────
 
   async function refreshParticipants() {
-    setIsRefreshing(true);
     try {
       const res = await fetch('/api/participants', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed');
       const data = (await res.json()) as { participants: Participant[] };
       startTransition(() => setParticipants(data.participants));
     } catch { /* silent */ }
-    finally { setIsRefreshing(false); }
   }
 
   async function submitCheckIn(email: string) {
@@ -320,9 +313,9 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
     <>
       <div
         id={QR_READER_ID}
-        className="min-h-[280px] w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-stone-900 [&_video]:w-full [&_video]:rounded-[1.75rem] [&_video]:object-cover"
+        className="min-h-70 w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-stone-900 [&_video]:w-full [&_video]:rounded-[1.75rem] [&_video]:object-cover"
       />
-      <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+      <div className="mt-4 rounded-3xl border border-white/10 bg-white/5 p-4">
         <p className="text-sm uppercase tracking-widest text-stone-300">{cameraLabel}</p>
         <p className="mt-2 text-sm text-stone-400">
           {scannerReady ? 'Point camera at a QR code.' : 'Allow camera access to begin scanning.'}
@@ -361,15 +354,21 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
         </ScannerModal>
       )}
 
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(253,224,71,0.22),_transparent_32%),linear-gradient(180deg,_#fff9ed_0%,_#fff3dc_42%,_#f7e7c7_100%)] px-4 py-8 text-stone-900 sm:px-6 lg:px-10">
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(253,224,71,0.22),transparent_32%),linear-gradient(180deg,#fff9ed_0%,#fff3dc_42%,#f7e7c7_100%)] px-4 py-8 text-stone-900 sm:px-6 lg:px-10">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
 
           {/* ── Header / stats ──────────────────────────────────────────── */}
-          <section className="grid gap-4 rounded-[2rem] border border-white/60 bg-white/85 p-6 shadow-[0_24px_80px_rgba(120,53,15,0.12)] backdrop-blur md:grid-cols-[1.3fr_0.7fr]">
+          <section className="grid gap-4 rounded-4xl border border-white/60 bg-white/85 p-6 shadow-[0_24px_80px_rgba(120,53,15,0.12)] backdrop-blur md:grid-cols-[1.3fr_0.7fr]">
             <div className="space-y-4">
               <p className="text-sm font-semibold uppercase tracking-[0.35em]" style={{ color: '#4285F4' }}>
                 Build With AI 2026
               </p>
+              <div className="mt-4 flex items-center gap-3 text-sm text-stone-500">
+                <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
+                  Signed in as {adminName}
+                </span>
+                <AdminSignOutButton />
+              </div>
               <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
                 QR check-in for your participant list
               </h1>
@@ -392,19 +391,19 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
             </div>
 
             <div className="grid gap-3 sm:grid-cols-4 md:grid-cols-1">
-              <div className="rounded-[1.5rem] bg-stone-950 px-5 py-4 text-stone-50">
+              <div className="rounded-3xl bg-stone-950 px-5 py-4 text-stone-50">
                 <p className="text-sm text-stone-300">Total</p>
                 <p className="mt-2 text-3xl font-semibold">{participants.length}</p>
               </div>
-              <div className="rounded-[1.5rem] px-5 py-4" style={{ background: '#e8f5e9' }}>
+              <div className="rounded-3xl px-5 py-4" style={{ background: '#e8f5e9' }}>
                 <p className="text-sm" style={{ color: '#34A853' }}>Checked in</p>
                 <p className="mt-2 text-3xl font-semibold" style={{ color: '#1e7e34' }}>{presentCount}</p>
               </div>
-              <div className="rounded-[1.5rem] px-5 py-4" style={{ background: '#f8df94ff' }}>
+              <div className="rounded-3xl px-5 py-4" style={{ background: '#f8df94ff' }}>
                 <p className="text-sm" style={{ color: '#e65100' }}>Waiting</p>
                 <p className="mt-2 text-3xl font-semibold" style={{ color: '#e65100' }}>{absentCount}</p>
               </div>
-              <div className="rounded-[1.5rem] px-5 py-4" style={{ background: '#e3f2fd' }}>
+              <div className="rounded-3xl px-5 py-4" style={{ background: '#e3f2fd' }}>
                 <p className="text-sm" style={{ color: '#4285F4' }}>🍱 Food given</p>
                 <p className="mt-2 text-3xl font-semibold" style={{ color: '#1565c0' }}>{foodCount}</p>
               </div>
@@ -413,7 +412,7 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
 
           {/* ── manual ────────────────────────────────────────── */}
           {/* Participant list */}
-          <section className="rounded-[2rem] border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
+          <section className="rounded-4xl border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em]" style={{ color: '#4285F4' }}>Attendance register</p>
@@ -425,7 +424,7 @@ export function CheckInDashboard({ initialParticipants }: { initialParticipants:
             {/* Debounced search */}
             <div className="mt-4">
               <input
-                className="w-full rounded-[1rem] border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-950 outline-none transition placeholder:text-stone-400"
+                className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-950 outline-none transition placeholder:text-stone-400"
                 style={{ ['--tw-ring-color' as string]: '#4285F4' }}
                 onFocus={e => (e.target.style.borderColor = '#4285F4')}
                 onBlur={e => (e.target.style.borderColor = '')}

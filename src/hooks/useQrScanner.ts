@@ -146,7 +146,6 @@ export function useQrScanner({
 
     void run();
     return () => { cancelled = true; void stopScanner(); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt, elementId, stopScanner, debounceMs]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
