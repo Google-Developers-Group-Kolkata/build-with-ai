@@ -36,53 +36,56 @@ function ParticipantModal({
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-md animate-[slideUp_0.25s_ease-out] rounded-4xl bg-white p-6 shadow-2xl">
+      <div className="w-full max-w-md animate-[slideUp_0.25s_ease-out] rounded-4xl bg-[#1a1a1a] p-6 shadow-2xl border border-white/10">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: participant.attended ? '#34A853' : '#FBBC04' }}>
               {participant.attended ? 'Already checked in' : 'Pending check-in'}
             </p>
-            <h2 className="mt-1 text-2xl font-semibold text-stone-950">{participant.name}</h2>
+            <h2 className="mt-1 text-2xl font-semibold text-white">{participant.name}</h2>
           </div>
           <span
             className="mt-1 shrink-0 rounded-full px-3 py-1 text-sm font-medium"
             style={participant.attended
-              ? { background: '#e8f5e9', color: '#34A853' }
-              : { background: '#fffde7', color: '#F9AB00' }}
+              ? { background: 'rgba(52,168,83,0.18)', color: '#34A853' }
+              : { background: 'rgba(251,188,4,0.18)', color: '#FBBC04' }}
           >
             {participant.attended ? 'Present' : 'Pending'}
           </span>
         </div>
 
-        <div className="mt-5 space-y-2 rounded-[1.25rem] bg-stone-50 p-4 text-sm text-stone-700">
+        <div className="mt-5 space-y-2 rounded-[1.25rem] bg-white/5 p-4 text-sm text-[#e8eaed]">
           <div className="flex justify-between">
-            <span className="text-stone-400">Email</span>
-            <span className="font-medium text-stone-900 text-right break-all">{participant.email}</span>
+            <span className="text-white/40">Email</span>
+            <span className="font-medium text-white text-right break-all">{participant.email}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-stone-400">Organization</span>
-            <span className="font-medium text-stone-900">{participant.organization || '—'}</span>
+            <span className="text-white/40">Organization</span>
+            <span className="font-medium text-white text-right break-after-all">{participant.organization || '—'}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-stone-400">Gender</span>
-            <span className="font-medium text-stone-900">{participant.gender || '—'}</span>
+            <span className="text-white/40">Gender</span>
+            <span className="font-medium text-white">{participant.gender || '—'}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-stone-400">Phone</span>
-            <span className="font-medium text-stone-900">{participant.phone || '—'}</span>
+            <span className="text-white/40">Phone</span>
+            <span className="font-medium text-white">{participant.phone || '—'}</span>
           </div>
           {participant.dietaryPreference && (
             <div className="flex justify-between">
-              <span className="text-stone-400">Dietary</span>
-              <span className="font-medium text-stone-900">{participant.dietaryPreference}</span>
+              <span className="text-white/40">Dietary</span>
+              <span className="font-medium" style={participant.dietaryPreference?.toLocaleLowerCase() === "veg"
+                ? { color: '#34A853' }
+                : { color: '#EA4335' }
+              }>{participant.dietaryPreference}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-stone-400">Food</span>
+            <span className="text-white/40">Food</span>
             <span
               className="font-medium"
               style={{
-                color: participant.food ? '#34A853' : participant.attended ? '#F9AB00' : '#a8a29e'
+                color: participant.food ? '#34A853' : participant.attended ? '#FBBC04' : '#666'
               }}
             >
               {participant.food ? '🍱 Given' : participant.attended ? '⏳ Not yet given' : '—'}
@@ -92,7 +95,7 @@ function ParticipantModal({
 
         <div className="mt-5 flex gap-3">
           <button
-            className="flex-1 rounded-2xl border border-stone-300 py-3 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
+            className="flex-1 rounded-2xl border border-white/15 py-3 text-sm font-medium text-white/70 transition hover:bg-white/10"
             onClick={onClose}
             type="button"
           >
@@ -113,7 +116,7 @@ function ParticipantModal({
             <button
               className="flex-1 rounded-2xl py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
               style={participant.food
-                ? { background: '#e8f5e9', color: '#34A853', cursor: 'default' }
+                ? { background: 'rgba(52,168,83,0.18)', color: '#34A853', cursor: 'default' }
                 : { background: '#34A853', color: '#fff' }}
               disabled={isFoodSubmitting || participant.food}
               onClick={onFoodGiven}
@@ -354,25 +357,25 @@ export function CheckInDashboard({
         </ScannerModal>
       )}
 
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(253,224,71,0.22),transparent_32%),linear-gradient(180deg,#fff9ed_0%,#fff3dc_42%,#f7e7c7_100%)] px-4 py-8 text-stone-900 sm:px-6 lg:px-10">
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.12),transparent_40%),linear-gradient(180deg,#0d0d0d_0%,#111111_100%)] px-4 py-8 text-[#e8eaed] sm:px-6 lg:px-10">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
 
           {/* ── Header / stats ──────────────────────────────────────────── */}
-          <section className="grid gap-4 rounded-4xl border border-white/60 bg-white/85 p-6 shadow-[0_24px_80px_rgba(120,53,15,0.12)] backdrop-blur md:grid-cols-[1.3fr_0.7fr]">
+          <section className="grid gap-4 rounded-4xl border border-white/10 bg-[#1a1a1a] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.4)] backdrop-blur md:grid-cols-[1.3fr_0.7fr]">
             <div className="space-y-4">
               <p className="text-sm font-semibold uppercase tracking-[0.35em]" style={{ color: '#4285F4' }}>
                 Build With AI 2026
               </p>
-              <div className="mt-4 flex items-center gap-3 text-sm text-stone-500">
-                <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
+              <div className="mt-4 flex items-center gap-3 text-sm text-white/50">
+                <span className="rounded-full bg-white/10 px-3 py-1 font-medium text-white/80">
                   Signed in as {adminName}
                 </span>
                 <AdminSignOutButton />
               </div>
-              <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
-                QR check-in for your participant list
+              <h1 className="max-w-2xl text-4xl font-semibold tracking-tight base-text-color sm:text-5xl">
+                GDG Kolkata Check-in Dashboard
               </h1>
-              <p className="max-w-2xl text-base leading-7 text-stone-700 sm:text-lg">
+              <p className="max-w-2xl text-base leading-7 text-white/60 sm:text-lg">
                 Scan a participant QR code or search the list to confirm attendance.
               </p>
               {/* Scan Now CTA */}
@@ -391,43 +394,42 @@ export function CheckInDashboard({
             </div>
 
             <div className="grid gap-3 sm:grid-cols-4 md:grid-cols-1">
-              <div className="rounded-3xl bg-stone-950 px-5 py-4 text-stone-50">
-                <p className="text-sm text-stone-300">Total</p>
+              <div className="rounded-3xl google-red border px-5 py-4" style={{ background: 'rgba(234,67,53,0.12)', borderColor: 'rgba(234,67,53,0.3)' }}>
+                <p className="text-sm">Total</p>
                 <p className="mt-2 text-3xl font-semibold">{participants.length}</p>
               </div>
-              <div className="rounded-3xl px-5 py-4" style={{ background: '#e8f5e9' }}>
+              <div className="rounded-3xl border px-5 py-4" style={{ background: 'rgba(52,168,83,0.12)', borderColor: 'rgba(52,168,83,0.3)' }}>
                 <p className="text-sm" style={{ color: '#34A853' }}>Checked in</p>
-                <p className="mt-2 text-3xl font-semibold" style={{ color: '#1e7e34' }}>{presentCount}</p>
+                <p className="mt-2 text-3xl font-semibold" style={{ color: '#34A853' }}>{presentCount}</p>
               </div>
-              <div className="rounded-3xl px-5 py-4" style={{ background: '#f8df94ff' }}>
-                <p className="text-sm" style={{ color: '#e65100' }}>Waiting</p>
-                <p className="mt-2 text-3xl font-semibold" style={{ color: '#e65100' }}>{absentCount}</p>
+              <div className="rounded-3xl border px-5 py-4" style={{ background: 'rgba(251,188,4,0.12)', borderColor: 'rgba(251,188,4,0.3)' }}>
+                <p className="text-sm" style={{ color: '#FBBC04' }}>Waiting</p>
+                <p className="mt-2 text-3xl font-semibold" style={{ color: '#FBBC04' }}>{absentCount}</p>
               </div>
-              <div className="rounded-3xl px-5 py-4" style={{ background: '#e3f2fd' }}>
+              <div className="rounded-3xl border px-5 py-4" style={{ background: 'rgba(66,133,244,0.12)', borderColor: 'rgba(66,133,244,0.3)' }}>
                 <p className="text-sm" style={{ color: '#4285F4' }}>🍱 Food given</p>
-                <p className="mt-2 text-3xl font-semibold" style={{ color: '#1565c0' }}>{foodCount}</p>
+                <p className="mt-2 text-3xl font-semibold" style={{ color: '#4285F4' }}>{foodCount}</p>
               </div>
             </div>
           </section>
 
           {/* ── manual ────────────────────────────────────────── */}
           {/* Participant list */}
-          <section className="rounded-4xl border border-white/65 bg-white/90 p-5 shadow-[0_24px_80px_rgba(120,53,15,0.12)]">
+          <section className="rounded-4xl border border-white/10 bg-[#1a1a1a] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.4)]">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em]" style={{ color: '#4285F4' }}>Attendance register</p>
-                <h2 className="mt-2 text-2xl font-semibold text-stone-950">Participant list</h2>
+                <h2 className="mt-2 text-2xl font-semibold text-white">Participant list</h2>
               </div>
-              <p className="text-xs text-stone-400">{filteredParticipants.length} shown</p>
+              <p className="text-xs text-white/40">{filteredParticipants.length} shown</p>
             </div>
 
             {/* Debounced search */}
             <div className="mt-4">
               <input
-                className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-950 outline-none transition placeholder:text-stone-400"
-                style={{ ['--tw-ring-color' as string]: '#4285F4' }}
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/30"
                 onFocus={e => (e.target.style.borderColor = '#4285F4')}
-                onBlur={e => (e.target.style.borderColor = '')}
+                onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search by name, email or company…"
                 type="search"
@@ -437,31 +439,31 @@ export function CheckInDashboard({
 
             <div className="mt-4 grid gap-3">
               {filteredParticipants.length === 0 ? (
-                <p className="py-6 text-center text-sm text-stone-400">No participants match your search.</p>
+                <p className="py-6 text-center text-sm text-white/40">No participants match your search.</p>
               ) : (
                 filteredParticipants
                   .slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
                   .map((participant) => (
                     <button
                       key={participant.id}
-                      className="w-full rounded-[1.4rem] border border-stone-200 bg-stone-50 px-4 py-4 text-left transition hover:border-amber-300 hover:bg-amber-50 active:scale-[0.99]"
+                      className="w-full rounded-[1.4rem] border border-white/8 bg-white/5 px-4 py-4 text-left transition hover:border-[#4285F4]/40 hover:bg-[#4285F4]/5 active:scale-[0.99]"
                       onClick={() => setModalParticipant(participant)}
                       type="button"
                     >
-                      <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex flex-wrap items-start justify-between gap-3 relative">
                         <div>
-                          <h3 className="text-base font-semibold text-stone-950">{participant.name}</h3>
-                          <p className="text-sm text-stone-500">{participant.email}</p>
-                          <p className="mt-1 text-xs text-stone-400">
+                          <h3 className="text-base font-semibold text-white">{participant.name}</h3>
+                          <p className="text-sm text-white/50">{participant.email}</p>
+                          <p className="mt-1 text-xs text-white/35">
                             {[participant.organization, participant.gender].filter(Boolean).join(' · ')}
                           </p>
                         </div>
-                        <div className="flex flex-col items-end gap-1">
+                        <div className="flex flex-col items-end gap-1 absolute top-1 md:top-3 right-0 md:right-4">
                           <span
                             className="rounded-full px-3 py-1 text-xs font-medium"
                             style={participant.attended
-                              ? { background: '#e8f5e9', color: '#34A853' }
-                              : { background: '#fffde7', color: '#F9AB00' }}
+                              ? { background: 'rgba(52,168,83,0.18)', color: '#34A853' }
+                              : { background: 'rgba(251,188,4,0.18)', color: '#FBBC04' }}
                           >
                             {participant.attended ? 'Present' : 'Pending'}
                           </span>
@@ -469,8 +471,8 @@ export function CheckInDashboard({
                             <span
                               className="rounded-full px-3 py-1 text-xs font-medium"
                               style={participant.food
-                                ? { background: '#e3f2fd', color: '#4285F4' }
-                                : { background: '#f5f5f5', color: '#757575' }}
+                                ? { background: 'rgba(66,133,244,0.18)', color: '#4285F4' }
+                                : { background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}
                             >
                               {participant.food ? '🍱 Food given' : '🍱 No food yet'}
                             </span>
@@ -478,7 +480,7 @@ export function CheckInDashboard({
                         </div>
                       </div>
                       {participant.dietaryPreference && (
-                        <p className="mt-2 text-xs text-stone-400">🥗 {participant.dietaryPreference}</p>
+                        <p className="mt-2 text-xs text-white/35">🥗 {participant.dietaryPreference}</p>
                       )}
                     </button>
                   ))
@@ -489,10 +491,9 @@ export function CheckInDashboard({
             {filteredParticipants.length > PAGE_SIZE && (
               <div className="mt-5 flex items-center justify-between gap-3">
                 <button
-                  className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
-                  style={{}}
+                  className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/60 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                   onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) (e.currentTarget as HTMLButtonElement).style.background = '#4285F4'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = ''; (e.currentTarget as HTMLButtonElement).style.color = ''; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = ''; }}
                   disabled={page === 1}
                   onClick={() => setPage((p) => p - 1)}
                   type="button"
@@ -500,15 +501,15 @@ export function CheckInDashboard({
                   ← Prev
                 </button>
 
-                <span className="text-xs text-stone-500">
+                <span className="text-xs text-white/40 whitespace-nowrap">
                   Page {page} of {Math.ceil(filteredParticipants.length / PAGE_SIZE)}
-                  <span className="ml-2 text-stone-400">
+                  <span className="ml-2 text-white/25">
                     ({(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filteredParticipants.length)} of {filteredParticipants.length})
                   </span>
                 </span>
 
                 <button
-                  className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/60 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                   onMouseEnter={e => { if (!(e.currentTarget as HTMLButtonElement).disabled) { (e.currentTarget as HTMLButtonElement).style.background = '#4285F4'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; } }}
                   onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = ''; (e.currentTarget as HTMLButtonElement).style.color = ''; }}
                   disabled={page >= Math.ceil(filteredParticipants.length / PAGE_SIZE)}
